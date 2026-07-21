@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: healthcare-assistant-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        value: https://healthcare-assistant-frontend.vercel.app
