@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://healthcare-assistant-backend.onrender.com/api/$1"
+      "destination": "https://healthcare-assistant-backend-ombn.onrender.com/api/$1"
     },
     {
       "source": "/(.*)",
