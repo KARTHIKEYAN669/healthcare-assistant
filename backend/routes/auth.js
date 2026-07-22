@@ -67,4 +67,14 @@ router.get('/me', require('../middleware/auth').auth, (req, res) => {
   res.json(user);
 });
 
+// TEMPORARY DEBUG ROUTE
+router.get('/debug-users', (req, res) => {
+  try {
+    const users = getAll('SELECT id, name, email, role FROM users');
+    res.json({ users });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
