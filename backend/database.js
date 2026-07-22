@@ -167,18 +167,51 @@ async function initDatabase() {
 
   saveDb();
 
+  // Ensure demo patient exists
+  const demoPatient = getOne('SELECT id FROM users WHERE email = ?', ['demo@patient.com']);
+  if (!demoPatient) {
+    const hashedPassword = await bcrypt.hash('demo123', 10);
+    const userId = uuidv4();
+    const profileId = uuidv4();
+    db.run(
+      'INSERT OR IGNORE INTO users (id, name, email, password, role, phone) VALUES (?, ?, ?, ?, ?, ?)',
+      [userId, 'Demo Patient', 'demo@patient.com', hashedPassword, 'patient', '+91-9876543210']
+    );
+    db.run(
+      'INSERT OR IGNORE INTO patient_profiles (id, user_id, dob, gender, blood_group) VALUES (?, ?, ?, ?, ?)',
+      [profileId, userId, '1995-08-15', 'Male', 'O+']
+    );
+  }
+
   // Seed doctors if none exist
   const doctorCount = getOne('SELECT COUNT(*) as count FROM users WHERE role = ?', ['doctor']);
   if (!doctorCount || doctorCount.count === 0) {
     await seedDoctors();
+  } else {
+    // Fix double dot emails if any exist from previous seeds
+    db.run("UPDATE users SET email = 'dr.priya.sharma@healthcare.com' WHERE email = 'dr..priya.sharma@healthcare.com'");
   }
 
+  saveDb();
   console.log('✅ Database initialized');
 }
 
 async function seedDoctors() {
   const { v4: uuidv4 } = require('uuid');
   const hashedPassword = await bcrypt.hash('doctor123', 10);
+  const patientPassword = await bcrypt.hash('demo123', 10);
+
+  // Seed demo patient first
+  const patientId = uuidv4();
+  const profileId = uuidv4();
+  db.run(
+    'INSERT OR IGNORE INTO users (id, name, email, password, role, phone) VALUES (?, ?, ?, ?, ?, ?)',
+    [patientId, 'Demo Patient', 'demo@patient.com', patientPassword, 'patient', '+91-9876543210']
+  );
+  db.run(
+    'INSERT OR IGNORE INTO patient_profiles (id, user_id, dob, gender, blood_group) VALUES (?, ?, ?, ?, ?)',
+    [profileId, patientId, '1995-08-15', 'Male', 'O+']
+  );
 
   const doctors = [
     { name: 'Dr. Priya Sharma', specialty: 'Cardiologist', qualification: 'MBBS, MD (Cardiology)', experience: 12, hospital: 'Apollo Hospital', fee: 800, rating: 4.9, bio: 'Expert in heart diseases and cardiac interventions with 12 years of experience.' },
@@ -199,7 +232,7 @@ async function seedDoctors() {
   for (const doc of doctors) {
     const userId = uuid();
     const docId = uuid();
-    const email = `${doc.name.toLowerCase().replace(/[^a-z]/g, '.')}@healthcare.com`;
+    const email = doc.name.toLowerCase().replace(/[^a-z]/g, '.').replace(/\.+/g, '.') + '@healthcare.com';
     db.run(
       'INSERT OR IGNORE INTO users (id, name, email, password, role, phone) VALUES (?, ?, ?, ?, ?, ?)',
       [userId, doc.name, email, hashedPassword, 'doctor', '+91-9876543210']
@@ -210,7 +243,7 @@ async function seedDoctors() {
     );
   }
   saveDb();
-  console.log('🌱 Seeded 12 doctors');
+  console.log('🌱 Seeded 12 doctors and demo patient');
 }
 
 module.exports = { initDatabase, getDb, saveDb, runQuery, getAll, getOne };
