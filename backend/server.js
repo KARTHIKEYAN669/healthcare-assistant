@@ -7,20 +7,8 @@ const { initDatabase } = require('./database');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-const allowedOrigins = [
-  'http://localhost:5173',
-  'https://healthcare-assistant-8qkhoeq5q-karthikeyan669s-projects.vercel.app',
-  process.env.FRONTEND_URL,
-];
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: true,
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
