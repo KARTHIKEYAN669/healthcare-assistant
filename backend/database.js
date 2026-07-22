@@ -2,6 +2,7 @@ const initSqlJs = require('sql.js');
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
+const { v4: uuidv4 } = require('uuid');
 
 const DB_PATH = path.join(__dirname, 'healthcare.db');
 let db = null;
@@ -197,7 +198,6 @@ async function initDatabase() {
 }
 
 async function seedDoctors() {
-  const { v4: uuidv4 } = require('uuid');
   const hashedPassword = await bcrypt.hash('doctor123', 10);
   const patientPassword = await bcrypt.hash('demo123', 10);
 
@@ -228,10 +228,9 @@ async function seedDoctors() {
     { name: 'Dr. Anil Chopra', specialty: 'ENT Specialist', qualification: 'MBBS, MS (ENT)', experience: 13, hospital: 'HearWell Clinic', fee: 650, rating: 4.8, bio: 'Ear, Nose, and Throat specialist with extensive surgical experience.' },
   ];
 
-  const { v4: uuid } = require('uuid');
   for (const doc of doctors) {
-    const userId = uuid();
-    const docId = uuid();
+    const userId = uuidv4();
+    const docId = uuidv4();
     const email = doc.name.toLowerCase().replace(/[^a-z]/g, '.').replace(/\.+/g, '.') + '@healthcare.com';
     db.run(
       'INSERT OR IGNORE INTO users (id, name, email, password, role, phone) VALUES (?, ?, ?, ?, ?, ?)',
