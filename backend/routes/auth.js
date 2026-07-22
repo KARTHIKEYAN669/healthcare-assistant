@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
-const { getDb, getOne, runQuery } = require('../database');
+const { getDb, getOne, getAll, runQuery } = require('../database');
 
 // Register
 router.post('/register', async (req, res) => {
