@@ -32,7 +32,7 @@ app.use('/api/reports', require('./routes/reports'));
 app.use('/api/health', require('./routes/health'));
 
 // Health check
-app.get('/', (req, res) => {
+app.get(['/', '/api'], (req, res) => {
   res.json({ status: 'ok', message: 'AI HealthCare Assistant API', version: '1.0.0' });
 });
 
@@ -42,8 +42,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error', message: err.message });
 });
 
-app.listen(PORT, () => {
-  console.log(`🏥 HealthCare API running on port ${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🏥 HealthCare API running on port ${PORT} (0.0.0.0)`);
 });
 
 module.exports = app;
