@@ -337,3 +337,23 @@ tbody tr:hover { background: rgba(255,255,255,0.02); }
 .font-bold { font-weight: 700; }
 .font-semibold { font-weight: 600; }
 .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* AI Formatted Response Styles */
+.ai-section-title {
+  font-weight: 700;
+  font-size: 14px;
+  margin-top: 12px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.ai-response-formatted {
+  font-size: 14px;
+  line-height: 1.7;
+}
+.ai-response-formatted strong {
+  color: #fff;
+}

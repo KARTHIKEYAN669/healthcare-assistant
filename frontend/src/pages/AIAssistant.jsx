@@ -158,16 +158,35 @@ export default function AIAssistant() {
               {msg.role==='user' ? <User size={16} color="#fff"/> : <Bot size={16} color="#fff"/>}
             </div>
             <div style={{
-              maxWidth:'75%', padding:'14px 18px', borderRadius: msg.role==='user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
-              background: msg.role==='user' ? 'var(--gradient-primary)' : 'rgba(255,255,255,0.06)',
-              border: msg.role==='user' ? 'none' : '1px solid var(--border)',
-              color: msg.role==='user' ? '#fff' : 'var(--text-secondary)',
-              fontSize:14, lineHeight:1.7,
+              maxWidth:'82%', padding:'16px 20px', borderRadius: msg.role==='user' ? '20px 20px 4px 20px' : '20px 20px 20px 4px',
+              background: msg.role==='user' ? 'var(--gradient-primary)' : 'rgba(15, 23, 42, 0.75)',
+              border: msg.role==='user' ? 'none' : '1px solid rgba(0, 212, 255, 0.15)',
+              boxShadow: msg.role==='user' ? '0 4px 20px rgba(0,212,255,0.25)' : '0 8px 32px rgba(0,0,0,0.3)',
+              backdropFilter: 'blur(12px)',
+              color: msg.role==='user' ? '#fff' : 'var(--text-primary)',
+              fontSize:14, lineHeight:1.75,
             }}>
               {msg.role==='user' ? msg.content : (
-                <div className="ai-response" dangerouslySetInnerHTML={{ __html: formatMessage(msg.content) }}/>
+                <>
+                  <div className="ai-response-formatted" dangerouslySetInnerHTML={{
+                    __html: formatMessage(msg.content)
+                      .replace(/🩺 <strong>Assessment:<\/strong>/g, '<div className="ai-section-title text-cyan">🩺 Assessment</div>')
+                      .replace(/⚡ <strong>Key Steps:<\/strong>/g, '<div className="ai-section-title text-emerald">⚡ Key Steps</div>')
+                      .replace(/🚨 <strong>Seek Doctor If:<\/strong>/g, '<div className="ai-section-title text-amber">🚨 Seek Doctor If</div>')
+                  }} />
+                  {msg.role === 'assistant' && !msg.isError && (
+                    <div style={{ display:'flex', gap:10, marginTop:12, paddingTop:10, borderTop:'1px solid rgba(255,255,255,0.08)', flexWrap:'wrap', alignItems:'center' }}>
+                      <button onClick={() => navigator.clipboard.writeText(msg.content)} className="btn btn-ghost btn-sm" style={{ fontSize:11, padding:'4px 8px', color:'var(--text-muted)' }}>
+                        📋 Copy Guidance
+                      </button>
+                      <a href="/doctors" className="btn btn-primary btn-sm" style={{ fontSize:11, padding:'4px 10px' }}>
+                        👨‍⚕️ Book Doctor
+                      </a>
+                    </div>
+                  )}
+                </>
               )}
-              {msg.time && <div style={{ fontSize:11, opacity:0.6, marginTop:8, textAlign: msg.role==='user' ? 'right' : 'left' }}>{msg.time}</div>}
+              {msg.time && <div style={{ fontSize:10, opacity:0.5, marginTop:6, textAlign: msg.role==='user' ? 'right' : 'left' }}>{msg.time}</div>}
             </div>
           </div>
         ))}
