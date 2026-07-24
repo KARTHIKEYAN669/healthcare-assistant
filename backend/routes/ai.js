@@ -193,6 +193,38 @@ General health query regarding "${query}".
 }
 
 function analyzeQuery(message) {
+  const cleanMsg = message.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+  
+  // Conversational Greetings
+  const greetings = ['hi', 'hello', 'hey', 'hi there', 'hello doctor', 'good morning', 'good afternoon', 'good evening', 'hey there'];
+  if (greetings.includes(cleanMsg)) {
+    return {
+      response: `Hello! 👋 How can I help you today?\n\nFeel free to describe any symptoms you have (like *fever, headache, cough, stomach pain*), or ask me any general health questions!`,
+      recommendedSpecialties: ['General Physician'],
+      severity: 'low'
+    };
+  }
+
+  // Identity / Capability questions
+  const identityQueries = ['who are you', 'what can you do', 'help', 'what is your name'];
+  if (identityQueries.some(q => cleanMsg.includes(q))) {
+    return {
+      response: `I am your **AI Health Assistant** 🏥\n\nI can help you:\n• Analyze symptoms & provide immediate self-care advice\n• Identify warning signs that require a doctor\n• Recommend specialists & assist with booking appointments\n\nHow are you feeling right now?`,
+      recommendedSpecialties: ['General Physician'],
+      severity: 'low'
+    };
+  }
+
+  // Gratitude / Goodbye
+  const gratitudeQueries = ['thanks', 'thank you', 'thx', 'bye', 'goodbye', 'ok thanks'];
+  if (gratitudeQueries.some(q => cleanMsg.includes(q))) {
+    return {
+      response: `You're very welcome! 😊 Stay healthy and take care. Feel free to message me anytime if you need health guidance!`,
+      recommendedSpecialties: ['General Physician'],
+      severity: 'low'
+    };
+  }
+
   const lowerMsg = message.toLowerCase();
   const matched = [];
 
@@ -200,6 +232,14 @@ function analyzeQuery(message) {
     if (data.keywords.some(kw => lowerMsg.includes(kw))) {
       matched.push(data);
     }
+  }
+
+  if (matched.length === 0) {
+    return {
+      response: `🩺 **Health Guidance:**\nI see you sent: "${message}".\n\n⚡ **Quick Health Tips:**\n• Stay hydrated (drink 2–3L water daily).\n• Get 7–8 hours of sound sleep.\n• Maintain balanced meals with fruits and vegetables.\n\n*If you have specific symptoms (like fever, cough, stomach pain, headache), please describe them so I can assist you better!*`,
+      recommendedSpecialties: ['General Physician'],
+      severity: 'low'
+    };
   }
 
   const responseText = formatShortAIResponse(matched, message);
