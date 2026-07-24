@@ -9,7 +9,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "cap:build": "vite build && cap sync android",
-    "cap:open": "cap open android"
+    "cap:open": "cap open android",
+    "apk:build": "vite build && cap sync android && cd android && gradlew.bat assembleDebug"
   },
   "dependencies": {
     "@capacitor/android": "^8.4.2",
