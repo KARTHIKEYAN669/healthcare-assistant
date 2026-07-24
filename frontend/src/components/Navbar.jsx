@@ -23,9 +23,11 @@ export default function Navbar() {
   return (
     <header style={{
       position: 'fixed', top: 0, left: 'var(--sidebar-width)', right: 0,
-      height: 'var(--navbar-height)', background: 'rgba(5,11,26,0.9)',
+      height: 'calc(var(--navbar-height) + var(--safe-area-top))',
+      paddingTop: 'var(--safe-area-top)',
+      background: 'rgba(5,11,26,0.95)',
       backdropFilter: 'blur(20px)', borderBottom: '1px solid var(--border)',
-      display: 'flex', alignItems: 'center', padding: '0 24px',
+      display: 'flex', alignItems: 'center', paddingLeft: '20px', paddingRight: '20px',
       justifyContent: 'space-between', zIndex: 100,
     }}>
       <div style={{ display:'flex', alignItems:'center', gap:14 }}>
