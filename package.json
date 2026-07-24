@@ -1,0 +1,10 @@
+{
+  "name": "healthcare-assistant-root",
+  "private": true,
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "cap:build": "cd frontend && npm run cap:build",
+    "apk:build": "cd frontend && npm run apk:build"
+  }
+}
